@@ -20,6 +20,29 @@ function usage {
 
 }
 
+function menu {
+	echo ""
+	echo "${red}Type ${green}q${red} to quit${der}"
+	while :
+	do
+		read -n 1 opt
+		case $opt in
+			q)
+				quit
+				;;
+		esac
+	done
+}
+
+
+function quit {
+	for pid in "${pids[@]}"; do
+		echo "Killing process $pid"
+		kill $pid
+	done
+	exit 0
+}
+
 
 while getopts :f:hp: opt; do
         case $opt in
@@ -47,10 +70,22 @@ if [ -z "$HITKIT_HOME" ]; then
 	exit 1
 fi
 
+pids=()
 
 echo "HITKIT_HOME=$HITKIT_HOME"
 echo "fileprefix=$fileprefix"
 echo "ports=$ports"
-for port in $(echo "$ports" |cut -d","); do
+for port in $(echo "$ports" | tr "," "\n"); do
 	echo "Starting portfinder for port ${port}"
+	cmd="$HITKIT_HOME/portfinder.sh -q ${port} > $fileprefix-open-port-$port.txt &"
+	echo " executing $cmd"
+	eval "$cmd"
+	pid=$!
+	pids=("${pids[@]}" "$pid")
 done
+
+menu
+
+
+
+
