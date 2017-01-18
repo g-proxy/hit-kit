@@ -35,7 +35,7 @@ function menu {
 }
 
 function create_display {
-	cmd="$HITKIT_HOME/control-display.sh &"
+	cmd="$HITKIT_HOME/control-display.sh "$ports" "$fileprefix" &"
 	eval $cmd
 	displaypid=$!
 }

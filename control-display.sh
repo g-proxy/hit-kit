@@ -21,11 +21,29 @@ function refresh {
 
 	headers
 
+	data
+
 	menu
 }
 
+function data {
+	r=2
+	for port in $(echo "$ports" | tr "," "\n"); do
+		display_row $r
+		r=$(($r+1))
+	done
+}
+
+function display_row {
+	file="$fileprefix-open-port-$port.txt"
+	count_open=$(cat "$file" |wc -l) 
+	text 4 $r 0 "${blue}${port}${der}"
+	text 4 $r 5 "$count_open"
+}
+
 function headers {
-	text 5 1 0 "${bold}${blue}Ports${der}"
+	text 4 1 0 "${bold}${blue}Port${der}"
+	text 4 1 5 "${bold}${blue}Open${der}"
 }
 
 
@@ -53,6 +71,19 @@ function menu {
 	cursor $(($(tput lines)-2))  0 
 	echo "${red}Press ${green}q${red} to quit${der}"
 }
+
+if [ -z "$1" ]; then
+	echo "Missing parameter passed to $0 ($1, the ports)"
+	exit 1
+fi
+
+if [ -z "$2" ]; then
+	echo "Missing parameter passed to $0 ($2, the file prefix)"
+	exit 1
+fi
+
+ports=$1
+fileprefix=$2
 
 while :
 do
