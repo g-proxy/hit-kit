@@ -15,7 +15,7 @@ function refresh {
 	cols=$(tput cols)
 	rows=$(tput lines)
 
-	#clear
+	clear
 
 	title
 
@@ -36,7 +36,7 @@ function data {
 
 function display_row {
 	open_count_file="$fileprefix-open-port-$port.txt"
-	open_scan_file="$fileprefix-open-count-$port.txt"
+	open_scan_file=".$fileprefix-open-count-$port.txt"
 	count_open=$(cat "$open_count_file" |wc -l)
 	count_scan=$(cat "$open_scan_file")
 	count_open=$(colour_no $count_open)
@@ -102,5 +102,5 @@ clear
 while :
 do
 	refresh
-	sleep 1
+	sleep 4
 done

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#trap a control-c to cleanly exit
+trap ctrl_c INT
+
 red="$(tput setaf 1)"
 green="$(tput setaf 2)"
 blue="$(tput setaf 4)"
@@ -7,6 +10,11 @@ der="$(tput sgr0)"
 
 ports="21,22,25,80"
 fileprefix="hkscan"
+
+function ctrl_c {
+	echo "Trapping ctrl-c to cleanly exit"
+	quit
+}
 
 function usage {
 	echo ""
@@ -106,7 +114,7 @@ echo "Press any key to start"
 read -n 1 foo
 for port in $(echo "$ports" | tr "," "\n"); do
 	echo "Starting portfinder for port ${port}"
-	cmd="$HITKIT_HOME/portfinder.sh -q -n $fileprefix-open-count-$port.txt ${port} >> $fileprefix-open-port-$port.txt &"
+	cmd="$HITKIT_HOME/portfinder.sh -q -n .$fileprefix-open-count-$port.txt ${port} >> $fileprefix-open-port-$port.txt &"
 	echo " executing $cmd"
 	
 	for i in $(eval echo "{1..$workers}"); do
