@@ -7,8 +7,14 @@ fi
 
 
 function usage {
+	echo "Scans random IP addresses for the specified open port"
+	echo ""
+	echo " Usage: $0 [-q|h] <port>"
+	echo ""
+	echo "  -h   Help"
+	echo "  -q   Quiet mode. Just reports found IPs"
+	
 
-	echo "Usage: $0 [-q|h] <port>"
 }
 
 
@@ -33,7 +39,11 @@ function warn {
 }
 
 function found {
-        echo "${found_box} ${blue}$1${der}"
+	if [ -z "$quiet" ]; then
+        	echo "${found_box} ${blue}$1${der}"
+	else
+		echo "$1"
+	fi
 }
 
 red="$(tput setaf 1)"
