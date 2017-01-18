@@ -16,6 +16,7 @@ function usage {
 	echo ""
 	echo "  -f <prefix>      File prefix to use on all scan files"
 	echo "  -h               Help"
+	echo "  -n <workers>     Set the number of workers on each port. Default is 1"
 	echo "  -p <port-list>   List of ports to scan. Default is $ports"
 
 }
@@ -53,8 +54,9 @@ function quit {
 	exit 0
 }
 
+workers=1
 
-while getopts :f:hp: opt; do
+while getopts :f:hn:p: opt; do
         case $opt in
 		f)
 			fileprefix=$OPTARG
@@ -63,6 +65,9 @@ while getopts :f:hp: opt; do
                         usage
                         exit 0
                         ;;
+		n)
+			workers=$OPTARG
+			;;
 		p)
 			ports=$OPTARG
 			;;
@@ -87,11 +92,14 @@ echo "fileprefix=$fileprefix"
 echo "ports=$ports"
 for port in $(echo "$ports" | tr "," "\n"); do
 	echo "Starting portfinder for port ${port}"
-	cmd="$HITKIT_HOME/portfinder.sh -q ${port} > $fileprefix-open-port-$port.txt &"
+	cmd="$HITKIT_HOME/portfinder.sh -q ${port} >> $fileprefix-open-port-$port.txt &"
 	echo " executing $cmd"
-	eval "$cmd"
-	pid=$!
-	pids=("${pids[@]}" "$pid")
+	
+	for i in $(eval echo "{1..$workers}"); do
+		eval "$cmd"
+		pid=$!
+		pids=("${pids[@]}" "$pid")
+	done
 done
 
 create_display
