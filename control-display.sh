@@ -15,7 +15,7 @@ function refresh {
 	cols=$(tput cols)
 	rows=$(tput lines)
 
-	clear
+	#clear
 
 	title
 
@@ -39,9 +39,19 @@ function display_row {
 	open_scan_file="$fileprefix-open-count-$port.txt"
 	count_open=$(cat "$open_count_file" |wc -l)
 	count_scan=$(cat "$open_scan_file")
+	count_open=$(colour_no $count_open)
+	count_scan=$(colour_no $count_scan)
 	text 4 $r 0 "${blue}${port}${der}"
 	text 5 $r 5 "$count_scan"
 	text 4 $r 11 "$count_open"
+}
+
+function colour_no {
+	if [[ "$1" == "0" ]]; then
+		echo "${red}$1${der}"
+	else
+		echo "${green}$1${der}"
+	fi
 }
 
 function headers {
@@ -88,7 +98,7 @@ fi
 
 ports=$1
 fileprefix=$2
-
+clear
 while :
 do
 	refresh
