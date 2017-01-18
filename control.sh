@@ -79,6 +79,8 @@ while getopts :f:hn:p: opt; do
 
 done
 
+shift "$(($OPTIND-1))"
+
 if [ -z "$HITKIT_HOME" ]; then
 	echo "HITKIT_HOME is not set. This is required for proper functioning"
 	echo "This script is being run from: $BASH_SOURCE which may or may not be the correct location"
@@ -92,7 +94,7 @@ echo "fileprefix=$fileprefix"
 echo "ports=$ports"
 for port in $(echo "$ports" | tr "," "\n"); do
 	echo "Starting portfinder for port ${port}"
-	cmd="$HITKIT_HOME/portfinder.sh -q ${port} >> $fileprefix-open-port-$port.txt &"
+	cmd="$HITKIT_HOME/portfinder.sh -q -n $fileprefix-open-count-$port.txt ${port} >> $fileprefix-open-port-$port.txt &"
 	echo " executing $cmd"
 	
 	for i in $(eval echo "{1..$workers}"); do

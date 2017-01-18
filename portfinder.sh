@@ -11,9 +11,9 @@ function usage {
 	echo ""
 	echo " Usage: $0 [-q|h] <port>"
 	echo ""
-	echo "  -h   Help"
-	echo "  -q   Quiet mode. Just reports found IPs"
-	
+	echo "  -h         Help"
+        echo "  -n <file>  Write numer of scans to file"
+	echo "  -q         Quiet mode. Just reports found IPs"
 
 }
 
@@ -54,15 +54,17 @@ info_box="[${green}*${der}]"
 warning_box="[${red}*${der}]"
 found_box="[${blue}*${der}]"
 
-while getopts :hq opt; do
+while getopts :hn:q opt; do
 	case $opt in
 		q)
 			quiet=Y
-			shift
 			;;
 		h)
 			usage
 			exit 0
+			;;
+		n)
+			count_file=$OPTARG
 			;;
 		\?)
 			echo "Unknown option: ${opt}, use -h for help."
@@ -71,12 +73,16 @@ while getopts :hq opt; do
 	esac
 
 done
+shift "$((OPTIND-1))"
+
 if [ -z "$quiet" ]; then
 	echo "${green}Welcome to ${red}PortFinder${green} by ${blue}General Proxy${der}"
 fi
 
 
 port=$1
+
+count=0;
 
 while :
 do
@@ -97,6 +103,10 @@ do
 		fi
 	else
 		log "Port closed"
+	fi
+	count=$(($count+1))
+	if [ -n "$count_file" ]; then
+		echo "$count" > $count_file
 	fi
 
 done

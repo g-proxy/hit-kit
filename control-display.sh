@@ -35,15 +35,19 @@ function data {
 }
 
 function display_row {
-	file="$fileprefix-open-port-$port.txt"
-	count_open=$(cat "$file" |wc -l) 
+	open_count_file="$fileprefix-open-port-$port.txt"
+	open_scan_file="$fileprefix-open-count-$port.txt"
+	count_open=$(cat "$open_count_file" |wc -l)
+	count_scan=$(cat "$open_scan_file")
 	text 4 $r 0 "${blue}${port}${der}"
-	text 4 $r 5 "$count_open"
+	text 5 $r 5 "$count_scan"
+	text 4 $r 11 "$count_open"
 }
 
 function headers {
 	text 4 1 0 "${bold}${blue}Port${der}"
-	text 4 1 5 "${bold}${blue}Open${der}"
+	text 5 1 5 "${bold}${blue}Scans${der}"
+	text 4 1 11 "${bold}${blue}Open${der}"
 }
 
 
