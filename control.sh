@@ -56,8 +56,11 @@ function quit {
 
 workers=1
 
-while getopts :f:hn:p: opt; do
+while getopts :cf:hn:p: opt; do
         case $opt in
+		c)
+			cleanrun=Y
+			;;
 		f)
 			fileprefix=$OPTARG
 			;;
@@ -89,9 +92,17 @@ fi
 
 pids=()
 
+if [ -n "$cleanrun" ]; then
+	rm ${fileprefix}*.txt
+fi
+
 echo "HITKIT_HOME=$HITKIT_HOME"
 echo "fileprefix=$fileprefix"
 echo "ports=$ports"
+echo "cleanrun=$cleanrun"
+echo "workers=$workers"
+echo "Press any key to start"
+read -n 1 foo
 for port in $(echo "$ports" | tr "," "\n"); do
 	echo "Starting portfinder for port ${port}"
 	cmd="$HITKIT_HOME/portfinder.sh -q -n $fileprefix-open-count-$port.txt ${port} >> $fileprefix-open-port-$port.txt &"

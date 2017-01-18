@@ -92,5 +92,5 @@ fileprefix=$2
 while :
 do
 	refresh
-	sleep 0.5
+	sleep 1
 done
