@@ -72,7 +72,7 @@ while getopts :hq opt; do
 
 done
 if [ -z "$quiet" ]; then
-	echo "${green}Welcome to ${red}PortFinder${green} by ${blue}General Proxy{der}"
+	echo "${green}Welcome to ${red}PortFinder${green} by ${blue}General Proxy${der}"
 fi
 
 
