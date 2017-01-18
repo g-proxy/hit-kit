@@ -21,8 +21,8 @@ function usage {
 }
 
 function menu {
-	echo ""
-	echo "${red}Type ${green}q${red} to quit${der}"
+	#echo ""
+	#echo "${red}Type ${green}q${red} to quit${der}"
 	while :
 	do
 		read -n 1 opt
@@ -34,8 +34,18 @@ function menu {
 	done
 }
 
+function create_display {
+	cmd="$HITKIT_HOME/control-display.sh &"
+	eval $cmd
+	displaypid=$!
+}
+
 
 function quit {
+	if [ -n "$displaypid" ]; then
+		kill $displaypid
+		echo "Killed display process $displaypid"
+	fi
 	for pid in "${pids[@]}"; do
 		echo "Killing process $pid"
 		kill $pid
@@ -84,6 +94,7 @@ for port in $(echo "$ports" | tr "," "\n"); do
 	pids=("${pids[@]}" "$pid")
 done
 
+create_display
 menu
 
 
