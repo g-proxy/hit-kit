@@ -14,6 +14,7 @@ function usage {
 	echo ""
 	echo " Usage: $0 [-h] [-p <port-list>]"
 	echo ""
+	echo "  -c               Clean run. Delete all files that match <file-prefix>*.txt"
 	echo "  -f <prefix>      File prefix to use on all scan files"
 	echo "  -h               Help"
 	echo "  -n <workers>     Set the number of workers on each port. Default is 1"
