@@ -86,6 +86,10 @@ count=0;
 
 while :
 do
+        if [ -n "$count_file" ]; then
+                echo "$count" > $count_file
+        fi
+
 	ip=$(random_ip ALL)
 	log "Scanning $ip"
 	cmd="proxychains nmap -sT -Pn -p${port} $ip --open"
@@ -105,8 +109,4 @@ do
 		log "Port closed"
 	fi
 	count=$(($count+1))
-	if [ -n "$count_file" ]; then
-		echo "$count" > $count_file
-	fi
-
 done
