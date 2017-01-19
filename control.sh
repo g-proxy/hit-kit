@@ -31,8 +31,6 @@ function usage {
 }
 
 function menu {
-	#echo ""
-	#echo "${red}Type ${green}q${red} to quit${der}"
 	while :
 	do
 		read -n 1 opt
@@ -50,6 +48,13 @@ function create_display {
 	displaypid=$!
 }
 
+function create_versioner {
+	cmd="$HITKIT_HOME/versioner.sh $1 $2 &"
+	eval $cmd
+	pid=$!
+	pids=("${pids[@]}" "$pid")
+}
+
 
 function quit {
 	if [ -n "$displaypid" ]; then
@@ -60,6 +65,10 @@ function quit {
 		echo "Killing process $pid"
 		kill $pid
 	done
+
+	#try and clean up terminal
+	reset
+	
 	exit 0
 }
 
@@ -103,6 +112,7 @@ pids=()
 
 if [ -n "$cleanrun" ]; then
 	rm ${fileprefix}*.txt
+	rm .${fileprefix}*.txt
 fi
 
 echo "HITKIT_HOME=$HITKIT_HOME"
@@ -122,8 +132,12 @@ for port in $(echo "$ports" | tr "," "\n"); do
 		pid=$!
 		pids=("${pids[@]}" "$pid")
 	done
+	
+	create_versioner $port $fileprefix
 done
 
+#echo "Initialised system. Press any key to continue"
+#read -n 1 foo
 create_display
 menu
 

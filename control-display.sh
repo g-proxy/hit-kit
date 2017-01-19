@@ -37,13 +37,17 @@ function data {
 function display_row {
 	open_count_file="$fileprefix-open-port-$port.txt"
 	open_scan_file=".$fileprefix-open-count-$port.txt"
+	version_file="$fileprefix-version-port-$port.txt"
 	count_open=$(cat "$open_count_file" |wc -l)
 	count_scan=$(cat "$open_scan_file")
+	count_ver=$(cat "$version_file" |wc -l)
 	count_open=$(colour_no $count_open)
 	count_scan=$(colour_no $count_scan)
+	count_ver=$(colour_no $count_ver)
 	text 4 $r 0 "${blue}${port}${der}"
 	text 5 $r 5 "$count_scan"
 	text 4 $r 11 "$count_open"
+	text 7 $r 16 "$count_ver"
 }
 
 function colour_no {
@@ -55,9 +59,10 @@ function colour_no {
 }
 
 function headers {
-	text 4 1 0 "${bold}${blue}Port${der}"
-	text 5 1 5 "${bold}${blue}Scans${der}"
-	text 4 1 11 "${bold}${blue}Open${der}"
+	text 4 1 0 "${bold}${blue}Port"
+	text 5 1 5 "Scans"
+	text 4 1 11 "Open"
+	text 7 1 16 "Version${der}"
 }
 
 

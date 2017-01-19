@@ -14,6 +14,9 @@ Typical usage:
 Runs a clean run, across the ports above, and saves results in files beginning with "myrun"
 This display will show the number of scans and successes as it progresses.
 
+This was all built to work on Kali (2016.2) so any debian system should be ok. Do set up 
+proxychains though (it's for your own good).
+
 Enjoy,
 
 Gen. Proxy
