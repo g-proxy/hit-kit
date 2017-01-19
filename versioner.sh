@@ -25,7 +25,7 @@ function check_new_ip {
 function version_scan {
 	ip=$1
 	#echo "scanning ip: $ip"
-	cmd="proxychains nmap -sV -p${port} --open ${ip}"
+	cmd="proxychains nmap -sV -Pn -p${port} --open ${ip}"
 	#echo "cmd=$cmd"
 	result=$(${cmd})
 	#echo "$result"
@@ -43,13 +43,18 @@ function version_scan {
 function check_vulns {
 	version=$1
 	for vuln in $(cat $HITKIT_HOME/version-vulns/$port); do
-		match=$(echo "$version" |grep "$vuln")
-		if [ -n "$match" ]; then
-			echo "$ip $version" >> $vuln_file
-		fi
+		check_vuln "$version" "$vuln"
 	done 
 }
 
+function check_vuln {
+	version=$1
+	search=$2
+        match=$(echo "$version" |grep "$search")
+        if [ -n "$match" ]; then
+                echo "$ip $version ${red}${search}{der}" >> $vuln_file
+        fi
+}
 
 
 if [ -z "$1" ]; then
@@ -65,6 +70,9 @@ fi
 
 port=$1
 fileprefix=$2
+vsearch=$3
+
+echo "vsearch=$vsearch"
 
 touch_file=".$fileprefix-version-touch-port-$port.txt"
 open_file="$fileprefix-open-port-$port.txt"
@@ -91,8 +99,10 @@ do
 		sleep $refresh_rate
 	else
 		version=$(version_scan $next)
-		if [ -n "$vuln_file_exists" ]; then
-			check_vulns $version
-fi
+		if [ -n "$vsearch" ]; then
+			check_vuln "$version" "$vsearch" 
+		elif [ -n "$vuln_file_exists" ]; then
+			check_vulns "$version"
+		fi
 	fi
 done

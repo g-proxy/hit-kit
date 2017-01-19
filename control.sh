@@ -27,7 +27,7 @@ function usage {
 	echo "  -h               Help"
 	echo "  -n <workers>     Set the number of workers on each port. Default is 1"
 	echo "  -p <port-list>   List of ports to scan. Default is $ports"
-
+	echo "  -v <version>     Grep the version against the string supplied."
 }
 
 function menu {
@@ -49,7 +49,7 @@ function create_display {
 }
 
 function create_versioner {
-	cmd="$HITKIT_HOME/versioner.sh $1 $2 &"
+	cmd="$HITKIT_HOME/versioner.sh $1 $2 $3 &"
 	eval $cmd
 	pid=$!
 	pids=("${pids[@]}" "$pid")
@@ -74,7 +74,7 @@ function quit {
 
 workers=1
 
-while getopts :cf:hn:p: opt; do
+while getopts :cf:hn:p:v: opt; do
         case $opt in
 		c)
 			cleanrun=Y
@@ -91,6 +91,9 @@ while getopts :cf:hn:p: opt; do
 			;;
 		p)
 			ports=$OPTARG
+			;;
+		v)
+			vsearch=$OPTARG
 			;;
                 \?)
                         echo "Unknown option: ${opt}, use -h for help."
@@ -120,6 +123,8 @@ echo "fileprefix=$fileprefix"
 echo "ports=$ports"
 echo "cleanrun=$cleanrun"
 echo "workers=$workers"
+echo "vsearch=$vsearch"
+echo ""
 echo "Press any key to start"
 read -n 1 foo
 for port in $(echo "$ports" | tr "," "\n"); do
@@ -133,7 +138,7 @@ for port in $(echo "$ports" | tr "," "\n"); do
 		pids=("${pids[@]}" "$pid")
 	done
 	
-	create_versioner $port $fileprefix
+	create_versioner "$port" "$fileprefix" "$vsearch"
 done
 
 #echo "Initialised system. Press any key to continue"
