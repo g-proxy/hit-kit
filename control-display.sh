@@ -6,8 +6,15 @@ blue="$(tput setaf 4)"
 der="$(tput sgr0)"
 bold="$(tput bold)"
 
+trap 'redraw' WINCH
+
 function cursor {
 	tput cup $1 $2
+}
+
+function redraw {
+	clear
+	refresh
 }
 
 function refresh {
@@ -15,7 +22,7 @@ function refresh {
 	cols=$(tput cols)
 	rows=$(tput lines)
 
-	clear
+	#clear
 
 	title
 
@@ -110,6 +117,7 @@ fi
 ports=$1
 fileprefix=$2
 clear
+redraw
 while :
 do
 	refresh
