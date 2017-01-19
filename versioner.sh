@@ -24,18 +24,18 @@ function check_new_ip {
 
 function version_scan {
 	ip=$1
-	echo "scanning ip: $ip"
+	#echo "scanning ip: $ip"
 	cmd="proxychains nmap -sV -p${port} --open ${ip}"
-	echo "cmd=$cmd"
+	#echo "cmd=$cmd"
 	result=$(${cmd})
-	echo "$result"
+	#echo "$result"
 	open=$(echo "$result" |grep open)
 	if [ -z "$open" ]; then
-		echo $ip "No longer open"
+		#echo $ip "No longer open"
 	else
 		version=$(echo "$open" |tr -s " " |cut -d" " -f4-)
 		if [ -z "$version" ]; then
-			echo "No version detected"
+			#echo "No version detected"
 		else
 			record_version $ip "$version"
 		fi
