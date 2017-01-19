@@ -49,7 +49,7 @@ function create_display {
 }
 
 function create_versioner {
-	cmd="$HITKIT_HOME/versioner.sh $1 $2 $3 &"
+	cmd="$HITKIT_HOME/versioner.sh "$1" "$2" "$3" &"
 	eval $cmd
 	pid=$!
 	pids=("${pids[@]}" "$pid")
