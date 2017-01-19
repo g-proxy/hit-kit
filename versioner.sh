@@ -69,10 +69,11 @@ fileprefix=$2
 touch_file=".$fileprefix-version-touch-port-$port.txt"
 open_file="$fileprefix-open-port-$port.txt"
 version_file="$fileprefix-version-port-$port.txt"
-vuln_file="$fileprefix-version-vuln-$port.txt"
+vuln_file="$fileprefix-version-vuln-port-$port.txt"
 
 touch $version_file
 touch $touch_file
+touch $vuln_file
 
 if [ -f $HITKIT_HOME/version-vulns/$port ]; then
 	vuln_file_exists=Y

@@ -38,7 +38,7 @@ function display_row {
 	open_count_file="$fileprefix-open-port-$port.txt"
 	open_scan_file=".$fileprefix-open-count-$port.txt"
 	version_file="$fileprefix-version-port-$port.txt"
-	vuln_file="$fileprefix-version-port-$port.txt"
+	vuln_file="$fileprefix-version-vuln-port-$port.txt"
 	count_open=$(cat "$open_count_file" |wc -l)
 	count_scan=$(cat "$open_scan_file")
 	count_ver=$(cat "$version_file" |wc -l)
