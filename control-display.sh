@@ -38,16 +38,22 @@ function display_row {
 	open_count_file="$fileprefix-open-port-$port.txt"
 	open_scan_file=".$fileprefix-open-count-$port.txt"
 	version_file="$fileprefix-version-port-$port.txt"
+	vuln_file="$fileprefix-version-port-$port.txt"
 	count_open=$(cat "$open_count_file" |wc -l)
 	count_scan=$(cat "$open_scan_file")
 	count_ver=$(cat "$version_file" |wc -l)
+	count_vuln=$(cat "$vuln_file" |wc -l)
 	count_open=$(colour_no $count_open)
 	count_scan=$(colour_no $count_scan)
 	count_ver=$(colour_no $count_ver)
 	text 4 $r 0 "${blue}${port}${der}"
 	text 5 $r 5 "$count_scan"
 	text 4 $r 11 "$count_open"
-	text 7 $r 16 "$count_ver"
+	if [ "$count_vuln" -gt 0 ]; then
+		text 8 $r 16 "${count_ver}${bold}${red}(${count_vuln})${der}"
+	else
+		text 8 $r 16 "$count_ver"
+	fi
 }
 
 function colour_no {

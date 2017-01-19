@@ -30,20 +30,25 @@ function version_scan {
 	result=$(${cmd})
 	#echo "$result"
 	open=$(echo "$result" |grep open)
-	if [ -z "$open" ]; then
-		#echo $ip "No longer open"
-	else
+	if [ -n "$open" ]; then
 		version=$(echo "$open" |tr -s " " |cut -d" " -f4-)
-		if [ -z "$version" ]; then
-			#echo "No version detected"
-		else
+		if [ -n "$version" ]; then
 			record_version $ip "$version"
 		fi
 	fi
+	echo "$version"
 }
 
 
-
+function check_vulns {
+	version=$1
+	for vuln in $(cat $HITKIT_HOME/version-vulns/$port); do
+		match=$(echo "$version" |grep "$vuln")
+		if [ -n "$match" ]; then
+			echo "$ip $version" >> $vuln_file
+		fi
+	done 
+}
 
 
 
@@ -64,9 +69,14 @@ fileprefix=$2
 touch_file=".$fileprefix-version-touch-port-$port.txt"
 open_file="$fileprefix-open-port-$port.txt"
 version_file="$fileprefix-version-port-$port.txt"
+vuln_file="$fileprefix-version-vuln-$port.txt"
 
 touch $version_file
 touch $touch_file
+
+if [ -f $HITKIT_HOME/version-vulns/$port ]; then
+	vuln_file_exists=Y
+fi
 
 if [ -z "$(cat $touch_file)" ]; then
 	echo "0" > $touch_file
@@ -79,6 +89,9 @@ do
 	if [ -z "$next" ]; then
 		sleep $refresh_rate
 	else
-		version_scan $next
+		version=$(version_scan $next)
+		if [ -n "$vuln_file_exists" ]; then
+			check_vulns $version
+fi
 	fi
 done
