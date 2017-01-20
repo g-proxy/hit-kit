@@ -3,11 +3,6 @@
 #trap a control-c to cleanly exit
 trap ctrl_c INT
 
-red="$(tput setaf 1)"
-green="$(tput setaf 2)"
-blue="$(tput setaf 4)"
-der="$(tput sgr0)"
-
 ports="21,22,25,80"
 fileprefix="hkscan"
 
@@ -49,7 +44,7 @@ function create_display {
 }
 
 function create_versioner {
-	cmd="$HITKIT_HOME/versioner.sh "$1" "$2" "$3" &"
+	cmd='$HITKIT_HOME/versioner.sh "$1" "$2" "$3" &'
 	eval $cmd
 	pid=$!
 	pids=("${pids[@]}" "$pid")
@@ -110,6 +105,7 @@ if [ -z "$HITKIT_HOME" ]; then
 	echo "This script is being run from: $BASH_SOURCE which may or may not be the correct location"
 	exit 1
 fi
+source HITKIT_HOME/colours.sh
 
 pids=()
 

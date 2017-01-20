@@ -2,6 +2,7 @@
 
 refresh_rate=4
 
+source $HITKIT_HOME/colours.sh
 
 function record_version {
 	echo "$1 $2" >> $version_file
@@ -43,7 +44,7 @@ function version_scan {
 function check_vulns {
 	version=$1
 	for vuln in $(cat $HITKIT_HOME/version-vulns/$port); do
-		check_vuln "$version" "$vuln"
+		check_vuln "$version" "$vuln" $2
 	done 
 }
 
@@ -52,7 +53,7 @@ function check_vuln {
 	search=$2
         match=$(echo "$version" |grep "$search")
         if [ -n "$match" ]; then
-                echo "$ip $version ${red}${search}{der}" >> $vuln_file
+                echo "$3 $version ${red}${search}${der}" >> $vuln_file
         fi
 }
 
@@ -70,7 +71,7 @@ fi
 
 port=$1
 fileprefix=$2
-vsearch=$3
+vsearch="$3"
 
 echo "vsearch=$vsearch"
 
@@ -100,9 +101,9 @@ do
 	else
 		version=$(version_scan $next)
 		if [ -n "$vsearch" ]; then
-			check_vuln "$version" "$vsearch" 
+			check_vuln "$version" "$vsearch" $next 
 		elif [ -n "$vuln_file_exists" ]; then
-			check_vulns "$version"
+			check_vulns "$version" $next
 		fi
 	fi
 done
