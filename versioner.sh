@@ -43,9 +43,13 @@ function version_scan {
 
 function check_vulns {
 	version=$1
-	for vuln in $(cat $HITKIT_HOME/version-vulns/$port); do
+	while read -r vuln; do
 		check_vuln "$version" "$vuln" $2
-	done 
+	done < $HITKIT_HOME/version-vulns/$port
+
+	#for vuln in "$(cat $HITKIT_HOME/version-vulns/$port)"; do
+	#	check_vuln "$version" "$vuln" $2
+	#done 
 }
 
 function check_vuln {
