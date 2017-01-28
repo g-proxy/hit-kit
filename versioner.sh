@@ -4,6 +4,12 @@ refresh_rate=4
 
 source $HITKIT_HOME/colours.sh
 
+if [ -z "${HITKIT_NOPROXY}" ]; then
+	hk_nmap_cmd="proxychains nmap"
+else
+	hk_nmap_cmd="nmap"
+fi
+
 function record_version {
 	echo "$1 $2" >> $version_file
 }
@@ -26,7 +32,7 @@ function check_new_ip {
 function version_scan {
 	ip=$1
 	#echo "scanning ip: $ip"
-	cmd="proxychains nmap -sV -Pn -p${port} --open ${ip}"
+	cmd="${hk_nmap_cmd} -sV -Pn -p${port} --open ${ip}"
 	#echo "cmd=$cmd"
 	result=$(${cmd})
 	#echo "$result"

@@ -5,6 +5,11 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
+if [ -z "${HITKIT_NOPROXY}" ]; then
+	hk_nmap_cmd="proxychains nmap"
+else
+	hk_nmap_cmd="nmap"
+fi
 
 function usage {
 	echo "Scans random IP addresses for the specified open port"
@@ -92,7 +97,7 @@ do
 
 	ip=$(random_ip ALL)
 	log "Scanning $ip"
-	cmd="proxychains nmap -sT -Pn -p${port} $ip --open"
+	cmd="${hk_nmap_cmd} -sT -Pn -p${port} $ip --open"
 	log "Using command: $cmd"
 	scan=$(${cmd})
 	log "Scan: $scan"
